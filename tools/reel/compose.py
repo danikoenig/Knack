@@ -18,7 +18,7 @@ gui = R0["gui"]
 def pad(r, p): return [r[0] - p, r[1] - p, r[2] + 2 * p, r[3] + 2 * p]
 FOCUS = {
     "full": [0, 0, gui[2], gui[3]],
-    "calib": [0, 1150, gui[2], 306],
+    "calib": [0, 1150, gui[2], 340],
     "shape": [0, 150, gui[2], 880],
 }
 SCENES = [  # start, ende, titel, untertitel, fokus, farbe

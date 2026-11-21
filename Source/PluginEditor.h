@@ -18,7 +18,7 @@ private:
     void timerCallback() override;
     juce::Rectangle<int> R (float x, float y, float w, float h) const;
 
-    static constexpr float designW = 300.0f, designH = 728.0f;
+    static constexpr float designW = 300.0f, designH = 752.0f;
 
     KnackProcessor& processor;
     KnackLookAndFeel lnf;

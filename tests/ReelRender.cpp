@@ -107,7 +107,7 @@ int main (int argc, char** argv)
 
     std::unique_ptr<KnackEditor> edp (new KnackEditor (p));
     auto& ed = *edp;
-    ed.setSize (600, 1456);   // 2x Designgroesse (300 x 728), scharfe Frames
+    ed.setSize (600, 1504);   // 2x Designgroesse (300 x 752), scharfe Frames
     ReelAccess::tick (ed);
 
     // Layout fuer compose.py

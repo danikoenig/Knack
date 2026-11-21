@@ -139,10 +139,10 @@ void KnackEditor::paint (Graphics& g)
 
     // Titel
     g.setColour (text);
-    g.setFont (FontOptions (38.0f * scale, Font::bold));
+    g.setFont (FontOptions (44.0f * scale, Font::bold));
     {
         const String title = "KNACK";
-        const float spacing = 6.0f * scale;
+        const float spacing = 7.0f * scale;
         GlyphArrangement ga;
         ga.addLineOfText (g.getCurrentFont(), title, 0.0f, 0.0f);
         float wTot = 0.0f;
@@ -152,16 +152,16 @@ void KnackEditor::paint (Graphics& g)
         {
             const auto s = String::charToString (title[i]);
             const float gw = g.getCurrentFont().getStringWidthFloat (s);
-            g.drawText (s, Rectangle<float> (x, 16.0f * scale, gw + 4.0f, 44.0f * scale), Justification::centredLeft);
+            g.drawText (s, Rectangle<float> (x, 9.0f * scale, gw + 4.0f, 50.0f * scale), Justification::centredLeft);
             x += gw + spacing;
         }
     }
     g.setColour (textDim);
     g.setFont (FontOptions (9.5f * scale, Font::bold));
-    g.drawText ("by Dani Koenig", R (0, 5, designW, 12).toFloat(), Justification::centred);
+    g.drawText ("by Dani Koenig", R (0, 733, designW, 12).toFloat(), Justification::centred);
     g.setColour (clipColour (glow));
     g.setFont (FontOptions (12.0f * scale, Font::bold));
-    g.drawText ("C L I P P E R", R (0, 58, designW, 16).toFloat(), Justification::centred);
+    g.drawText ("C L I P P E R", R (0, 60, designW, 16).toFloat(), Justification::centred);
 
     // Beschriftungen
     g.setColour (textDim);

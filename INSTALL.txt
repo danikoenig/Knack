@@ -1,6 +1,6 @@
 KNACK - INSTALLATION (macOS)
 by Dani Koenig
-https://github.com/danikoenig/Knack/releases
+https://github.com/danikoenig/knack/releases
 
 English below / Deutsch weiter unten
 

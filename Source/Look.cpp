@@ -289,9 +289,4 @@ void ScopeView::paint (Graphics& g)
     g.setColour (col.brighter (0.25f));
     g.strokePath (wave, PathStrokeType (2.0f, PathStrokeType::curved, PathStrokeType::rounded));
     g.restoreState();
-
-    g.setColour (textDim);
-    g.setFont (FontOptions (r.getHeight() * 0.1f, Font::bold));
-    g.drawText (gr > 0.1f ? "GR -" + String (gr, 1) + " dB" : "GR 0.0 dB", r.reduced (10.0f, 6.0f), Justification::bottomLeft);
-    g.drawText (String (roundToInt (clip * 100.0f)) + " %", r.reduced (10.0f, 6.0f), Justification::bottomRight);
 }

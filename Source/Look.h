@@ -36,11 +36,11 @@ private:
 class ScopeView : public juce::Component
 {
 public:
-    void setState (float clipValue, float shapeValue, float glowValue, float grDb)
+    void setState (float clipValue, float shapeValue, float glowValue)
     {
-        clip = clipValue; shape = shapeValue; glow = glowValue; gr = grDb; repaint();
+        clip = clipValue; shape = shapeValue; glow = glowValue; repaint();
     }
     void paint (juce::Graphics&) override;
 private:
-    float clip = 0.0f, shape = 0.5f, glow = 0.0f, gr = 0.0f;
+    float clip = 0.0f, shape = 0.5f, glow = 0.0f;
 };

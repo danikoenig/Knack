@@ -2,7 +2,8 @@ Free clipper plug-in for macOS (Apple Silicon), VST3 and Audio Unit. By Dani Koe
 
 **Download `Knack-Installer.pkg`** and double-click it. macOS blocks it the first time: open System Settings > Privacy & Security and click "Open Anyway". Full guide: see INSTALL.txt in the ZIP or in the repository.
 
-### Knack 1.0
+### New in v1.0.1
+- Cleaner curve display (no GR / percent text), CLIP starts at 20 %
 
 ### Features
 - One big CLIP knob: drive into the clipper, with a curve display (sine to fully squashed) and a red glow that grows with the intensity

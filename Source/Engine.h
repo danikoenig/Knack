@@ -26,7 +26,7 @@ namespace KnackDSP
 struct KnackParams
 {
     float inputDb  = 0.0f;
-    float clip     = 0.35f;   // 0..1  Drive in den Clipper
+    float clip     = 0.2f;    // 0..1  Drive in den Clipper
     float shape    = 0.5f;    // 0..1  0 = Soft, 1 = Hard
     float mix      = 1.0f;    // 0..1
     float outputDb = 0.0f;    // -12..0 (0 = 0 dBFS)

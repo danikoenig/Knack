@@ -109,7 +109,7 @@ void KnackEditor::timerCallback()
     clipKnob.repaint();
     hqBtn.repaint();
 
-    scope.setState (clip, (float) shapeSlider.getValue(), glow, e.clipGrDb.load());
+    scope.setState (clip, (float) shapeSlider.getValue(), glow);
     inMeter.setValue (e.inPeak.load());
     limMeter.setValue (e.limGrDb.load());
 

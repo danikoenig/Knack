@@ -13,7 +13,7 @@ AudioProcessorValueTreeState::ParameterLayout KnackProcessor::createLayout()
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::input, 1 }, "Input",
                     NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f, AudioParameterFloatAttributes().withStringFromValueFunction (dbText)));
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::clip, 1 }, "Clip",
-                    NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.35f, AudioParameterFloatAttributes().withStringFromValueFunction (pctText)));
+                    NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.2f, AudioParameterFloatAttributes().withStringFromValueFunction (pctText)));
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::shape, 1 }, "Shape",
                     NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.5f,
                     AudioParameterFloatAttributes().withStringFromValueFunction ([] (float v, int) { return v < 0.02f ? String ("Soft") : v > 0.98f ? String ("Hard") : String (roundToInt (v * 100.0f)) + " %"; })));

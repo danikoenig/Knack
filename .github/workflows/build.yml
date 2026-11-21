@@ -30,7 +30,7 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
 
       - name: Build
-        run: cmake --build build --config Release --target Knack_VST3 Knack_AU Knack_Standalone -j 4
+        run: cmake --build build --config Release --target Knack_VST3 Knack_AU Knack_CLAP Knack_Standalone -j 4
 
       - name: Validate AU (auval)
         run: |
@@ -47,10 +47,12 @@ jobs:
           ART=build/Knack_artefacts/Release
           codesign --force --deep --sign - "$ART/VST3/Knack.vst3"
           codesign --force --deep --sign - "$ART/AU/Knack.component"
+          codesign --force --deep --sign - "$ART/CLAP/Knack.clap"
           codesign --force --deep --sign - "$ART/Standalone/Knack.app"
           mkdir -p dist "pkg/Knack"
           cp -R "$ART/VST3/Knack.vst3" "pkg/Knack/"
           cp -R "$ART/AU/Knack.component" "pkg/Knack/"
+          cp -R "$ART/CLAP/Knack.clap" "pkg/Knack/"
           cp INSTALL.txt "pkg/Knack/INSTALL.txt"
           ditto -c -k --keepParent "pkg/Knack" "dist/Knack-VST3-macOS-arm64.zip"
           ditto -c -k --keepParent "$ART/Standalone/Knack.app" "dist/Knack-Standalone-macOS-arm64.zip"
@@ -76,6 +78,14 @@ jobs:
           pkgbuild --root pkgroot-au --component-plist build/pkg/component-au.plist \
             --identifier ch.danikoenig.knack.au --version "$VERSION" \
             --install-location "/Library/Audio/Plug-Ins/Components" build/pkg/KnackAU.pkg
+          # CLAP-Paket
+          mkdir -p pkgroot-clap
+          cp -R "$ART/CLAP/Knack.clap" pkgroot-clap/
+          pkgbuild --analyze --root pkgroot-clap build/pkg/component-clap.plist
+          plutil -replace 0.BundleIsRelocatable -bool NO build/pkg/component-clap.plist
+          pkgbuild --root pkgroot-clap --component-plist build/pkg/component-clap.plist \
+            --identifier ch.danikoenig.knack.clap --version "$VERSION" \
+            --install-location "/Library/Audio/Plug-Ins/CLAP" build/pkg/KnackCLAP.pkg
           sed "s/@VERSION@/$VERSION/g" installer/distribution.xml > build/pkg/distribution.xml
           productbuild --distribution build/pkg/distribution.xml --resources installer/resources \
             --package-path build/pkg "dist/Knack-Installer.pkg"

@@ -1,6 +1,6 @@
 # Knack
 
-Free clipper plug-in by Dani Koenig for macOS (Apple Silicon): VST3, Audio Unit and Standalone.
+Free clipper plug-in by Dani Koenig for macOS (Apple Silicon): VST3, CLAP, Audio Unit and Standalone.
 
 One big CLIP knob, a SOFT / HARD slider, INPUT with CALIBRATE (auto input), MIX for parallel clipping and an OUTPUT limiter (0 = 0 dBFS). The curve display and a red glow show how hard the signal is pushed.
 

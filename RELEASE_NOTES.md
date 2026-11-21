@@ -1,8 +1,11 @@
-Free clipper plug-in for macOS (Apple Silicon), VST3 and Audio Unit. By Dani Koenig.
+Free clipper plug-in for macOS (Apple Silicon), VST3, Audio Unit and CLAP. By Dani Koenig.
 
 **Download `Knack-Installer.pkg`** and double-click it. macOS blocks it the first time: open System Settings > Privacy & Security and click "Open Anyway". Full guide: see INSTALL.txt in the ZIP or in the repository.
 
-### New in v1.0.1
+### New in v1.0.2
+- **CLAP format** (Bitwig, Reaper ...), installed by the installer to /Library/Audio/Plug-Ins/CLAP
+
+### v1.0.1
 - Cleaner curve display (no GR / percent text), CLIP starts at 20 %
 
 ### Features

@@ -2,7 +2,7 @@
 
 Free clipper plug-in by Dani Koenig for macOS (Apple Silicon): VST3, Audio Unit and Standalone.
 
-One big CLIP knob, a SOFT / HARD slider, INPUT with CALIBRATE (auto input), HEAT, MIX for parallel clipping and an OUTPUT limiter (0 = -1 dBFS). The curve display and a red glow show how hard the signal is pushed.
+One big CLIP knob, a SOFT / HARD slider, INPUT with CALIBRATE (auto input), MIX for parallel clipping and an OUTPUT limiter (0 = 0 dBFS). The curve display and a red glow show how hard the signal is pushed.
 
 ## Build
 Built on GitHub Actions (macOS, Apple Silicon). Locally:

@@ -8,7 +8,6 @@ namespace ParamID
     inline constexpr const char* input  = "input";
     inline constexpr const char* clip   = "clip";
     inline constexpr const char* shape  = "shape";
-    inline constexpr const char* heat   = "heat";
     inline constexpr const char* mix    = "mix";
     inline constexpr const char* output = "output";
     inline constexpr const char* hq     = "hq";
@@ -50,7 +49,7 @@ private:
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout();
 
     KnackEngine engine;
-    std::atomic<float>* pInput = nullptr; std::atomic<float>* pClip = nullptr; std::atomic<float>* pShape = nullptr; std::atomic<float>* pHeat = nullptr;
+    std::atomic<float>* pInput = nullptr; std::atomic<float>* pClip = nullptr; std::atomic<float>* pShape = nullptr;
     std::atomic<float>* pMix = nullptr;   std::atomic<float>* pOut = nullptr;  std::atomic<float>* pHq = nullptr;
     std::atomic<float> pendingInputDb { 0.0f };
     bool lastHq = true;

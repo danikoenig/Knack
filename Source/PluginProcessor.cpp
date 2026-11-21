@@ -17,8 +17,6 @@ AudioProcessorValueTreeState::ParameterLayout KnackProcessor::createLayout()
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::shape, 1 }, "Shape",
                     NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.5f,
                     AudioParameterFloatAttributes().withStringFromValueFunction ([] (float v, int) { return v < 0.02f ? String ("Soft") : v > 0.98f ? String ("Hard") : String (roundToInt (v * 100.0f)) + " %"; })));
-    p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::heat, 1 }, "Heat",
-                    NormalisableRange<float> (0.0f, 1.0f, 0.001f), 0.0f, AudioParameterFloatAttributes().withStringFromValueFunction (pctText)));
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::mix, 1 }, "Mix",
                     NormalisableRange<float> (0.0f, 1.0f, 0.001f), 1.0f, AudioParameterFloatAttributes().withStringFromValueFunction (pctText)));
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ParamID::output, 1 }, "Output",
@@ -36,7 +34,6 @@ KnackProcessor::KnackProcessor()
     pInput = apvts.getRawParameterValue (ParamID::input);
     pClip  = apvts.getRawParameterValue (ParamID::clip);
     pShape = apvts.getRawParameterValue (ParamID::shape);
-    pHeat  = apvts.getRawParameterValue (ParamID::heat);
     pMix   = apvts.getRawParameterValue (ParamID::mix);
     pOut   = apvts.getRawParameterValue (ParamID::output);
     pHq    = apvts.getRawParameterValue (ParamID::hq);
@@ -65,7 +62,6 @@ void KnackProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
     p.inputDb  = pInput->load();
     p.clip     = pClip->load();
     p.shape    = pShape->load();
-    p.heat     = pHeat->load();
     p.mix      = pMix->load();
     p.outputDb = pOut->load();
     p.hq       = pHq->load() > 0.5f;

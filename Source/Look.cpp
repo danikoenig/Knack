@@ -234,7 +234,8 @@ static float displayWave (float s, float clip, float shape)
 {
     // Anzeige, kein echtes Signal: bei 0 % reiner Sinus, bei 100 % fast ein Rechteck
     const float vd = 1.0f + 18.0f * std::pow (clip, 1.1f);
-    const float k = KnackDSP::curveK (shape);
+    // nur Anzeige (nicht das echte Audio): Soft = runde Welle, Hard = flaches Dach mit scharfen Ecken
+    const float k = 1.05f + 45.0f * std::pow (shape, 1.6f);
     const float shaped = KnackDSP::shape (s * vd, k) / KnackDSP::shape (vd, k);
     const float w = jmin (1.0f, clip * 4.0f);
     return s + w * (shaped - s);

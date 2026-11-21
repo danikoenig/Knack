@@ -14,7 +14,6 @@ void KnackEngine::prepare (double sampleRate, int maxBlockSize, int numChannels)
     osLatency = (int) std::lround (os->getLatencyInSamples());
 
     clipArr.assign ((size_t) maxBlock, 0.0f);
-    heatArr.assign ((size_t) maxBlock, 0.0f);
     shapeArr.assign ((size_t) maxBlock, 0.0f);
     dryRing.setSize (2, ringMask + 1);
     dryBuf.setSize (2, maxBlock);
@@ -22,7 +21,6 @@ void KnackEngine::prepare (double sampleRate, int maxBlockSize, int numChannels)
     inS.reset (sr, 0.03);
     clipS.reset (sr, 0.03);
     shapeS.reset (sr, 0.03);
-    heatS.reset (sr, 0.03);
     mixS.reset (sr, 0.03);
     ceilS.reset (sr, 0.03);
     reset();
@@ -39,7 +37,6 @@ void KnackEngine::reset()
     inS.setCurrentAndTargetValue (inS.getTargetValue());
     clipS.setCurrentAndTargetValue (clipS.getTargetValue());
     shapeS.setCurrentAndTargetValue (shapeS.getTargetValue());
-    heatS.setCurrentAndTargetValue (heatS.getTargetValue());
     mixS.setCurrentAndTargetValue (mixS.getTargetValue());
     ceilS.setCurrentAndTargetValue (ceilS.getTargetValue());
 }
@@ -119,7 +116,6 @@ void KnackEngine::processChunk (AudioBuffer<float>& buffer, const KnackParams& p
     inS.setTargetValue (Decibels::decibelsToGain (p.inputDb));
     clipS.setTargetValue (p.clip);
     shapeS.setTargetValue (p.shape);
-    heatS.setTargetValue (p.heat);
     mixS.setTargetValue (p.mix);
     ceilS.setTargetValue (Decibels::decibelsToGain (KnackDSP::ceilingDb + jlimit (-24.0f, 0.0f, p.outputDb)));
 
@@ -130,7 +126,6 @@ void KnackEngine::processChunk (AudioBuffer<float>& buffer, const KnackParams& p
         const float g = inS.getNextValue();
         clipArr[(size_t) i] = clipS.getNextValue();
         shapeArr[(size_t) i] = shapeS.getNextValue();
-        heatArr[(size_t) i] = heatS.getNextValue();
         for (int c = 0; c < chans; ++c)
         {
             float* d = buffer.getWritePointer (c);
@@ -160,7 +155,7 @@ void KnackEngine::processChunk (AudioBuffer<float>& buffer, const KnackParams& p
         ringWrite = w & ringMask;
     }
 
-    // ---- Wet: Heat -> Drive -> Clip (4x Oversampling im HQ-Modus) ----
+    // ---- Wet: Drive -> Clip (4x Oversampling im HQ-Modus) ----
     float maxRatio = 1.0f;
     auto processWet = [&] (dsp::AudioBlock<float> block, int factor)
     {
@@ -169,16 +164,12 @@ void KnackEngine::processChunk (AudioBuffer<float>& buffer, const KnackParams& p
         {
             const int idx = jmin (n - 1, j / factor);
             const float clip = clipArr[(size_t) idx];
-            const float heat = heatArr[(size_t) idx];
             const float drive = KnackDSP::driveGain (clip);
             const float k = KnackDSP::curveK (shapeArr[(size_t) idx]);
             for (int c = 0; c < chans; ++c)
             {
                 float* d = block.getChannelPointer ((size_t) c);
-                float x = d[j];
-                if (heat > 0.0005f)
-                    x = KnackDSP::heatShape (x, heat);
-                const float xd = x * drive;
+                const float xd = d[j] * drive;
                 const float y = KnackDSP::shape (xd, k);
                 const float ax = std::abs (xd), ay = std::abs (y);
                 if (ay > 1e-6f && ax > ay)
@@ -206,7 +197,7 @@ void KnackEngine::processChunk (AudioBuffer<float>& buffer, const KnackParams& p
         clipGrDb = red > prev ? red : prev * 0.88f;
     }
 
-    // ---- DC-Blocker (Heat macht gerade Obertoene), Mix, Limiter ----
+    // ---- DC-Blocker, Mix, Limiter ----
     const float dcR = 1.0f - 20.0f / (float) sr;
     float minGain = 1.0f, outPk = 0.0f;
     for (int i = 0; i < n; ++i)

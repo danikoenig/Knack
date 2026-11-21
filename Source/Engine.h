@@ -9,7 +9,7 @@
 namespace KnackDSP
 {
     constexpr float maxDriveDb   = 24.0f;    // CLIP 100 % = +24 dB in den Clipper
-    constexpr float ceilingDb    = -1.0f;    // OUT-Regler 0 = -1 dBFS
+    constexpr float ceilingDb    = 0.0f;     // OUT-Regler 0 = 0 dBFS
     constexpr float calibTarget  = -6.0f;    // Calibrate: lauteste Spitze landet bei -6 dBFS
 
     // SHAPE: eine Kurve von soft (k klein) bis hart (k gross): y = x / (1 + |x|^k)^(1/k)
@@ -21,16 +21,6 @@ namespace KnackDSP
         const float ax = std::abs (x);
         return x / std::pow (1.0f + std::pow (ax, k), 1.0f / k);
     }
-
-    // Heat: asymmetrische Roehren-/Tape-Saettigung, kleines Signal bleibt auf Pegel
-    inline float heatShape (float x, float heat)
-    {
-        constexpr float a = 2.2f, b = 0.22f;
-        static const float t0 = std::tanh (b);
-        static const float norm = 1.0f / (a * (1.0f - t0 * t0));
-        const float s = (std::tanh (a * x + b) - t0) * norm * a;   // Steigung 1 bei 0
-        return x + heat * (s - x);
-    }
 }
 
 struct KnackParams
@@ -38,9 +28,8 @@ struct KnackParams
     float inputDb  = 0.0f;
     float clip     = 0.35f;   // 0..1  Drive in den Clipper
     float shape    = 0.5f;    // 0..1  0 = Soft, 1 = Hard
-    float heat     = 0.0f;    // 0..1
     float mix      = 1.0f;    // 0..1
-    float outputDb = 0.0f;    // -12..0 (0 = -1 dBFS)
+    float outputDb = 0.0f;    // -12..0 (0 = 0 dBFS)
     bool  hq       = true;    // 4x Oversampling
 };
 
@@ -75,8 +64,8 @@ private:
     int maxBlock = 512, numCh = 2, osLatency = 0;
     std::unique_ptr<juce::dsp::Oversampling<float>> os;
 
-    juce::SmoothedValue<float> inS, clipS, shapeS, heatS, mixS, ceilS;
-    std::vector<float> clipArr, heatArr, shapeArr;
+    juce::SmoothedValue<float> inS, clipS, shapeS, mixS, ceilS;
+    std::vector<float> clipArr, shapeArr;
     juce::AudioBuffer<float> dryRing, dryBuf;
     int ringWrite = 0, ringMask = 1023;
     bool lastHq = true;

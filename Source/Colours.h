@@ -14,7 +14,6 @@ namespace KnackColours
     const juce::Colour knobBody   { 0xff26282e };
     const juce::Colour calm       { 0xffff9a4d };   // wenig Clip: warmes Orange
     const juce::Colour hot        { 0xffff1f3f };   // viel Clip: Rot
-    const juce::Colour heat       { 0xffffb347 };   // Heat-Regler: Amber
     const juce::Colour mixCol     { 0xff4dd0e1 };   // Mix-Regler: Tuerkis
     const juce::Colour outCol     { 0xff9fa8da };   // Output/Limiter: Lavendel
 

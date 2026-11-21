@@ -18,13 +18,13 @@ private:
     void timerCallback() override;
     juce::Rectangle<int> R (float x, float y, float w, float h) const;
 
-    static constexpr float designW = 300.0f, designH = 740.0f;
+    static constexpr float designW = 300.0f, designH = 728.0f;
 
     KnackProcessor& processor;
     KnackLookAndFeel lnf;
 
     ScopeView scope;
-    juce::Slider clipKnob, inputKnob, shapeSlider, heatSlider, mixSlider, outSlider;
+    juce::Slider clipKnob, inputKnob, shapeSlider, mixSlider, outSlider;
     juce::TextButton calibrateBtn { "CALIBRATE" };
     juce::ToggleButton hqBtn;
     VMeter inMeter { VMeter::level, KnackColours::calm };
@@ -32,7 +32,7 @@ private:
 
     using SA = juce::AudioProcessorValueTreeState::SliderAttachment;
     using BA = juce::AudioProcessorValueTreeState::ButtonAttachment;
-    std::unique_ptr<SA> clipAtt, inputAtt, shapeAtt, heatAtt, mixAtt, outAtt;
+    std::unique_ptr<SA> clipAtt, inputAtt, shapeAtt, mixAtt, outAtt;
     std::unique_ptr<BA> hqAtt;
 
     float glow = 0.0f, pulse = 0.0f, scale = 1.0f;

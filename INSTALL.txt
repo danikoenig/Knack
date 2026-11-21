@@ -122,11 +122,10 @@ HOW TO USE (SHORT)
   The curve at the top shows it: sine wave = clean, flat = fully squashed.
   The more you turn up, the more the plugin glows red.
 - SOFT / HARD (slider above the knob): from a round, smooth clip to a hard clip.
-- HEAT: extra warm saturation before the clipper.
 - MIX: blend clipped and dry signal for parallel (New York style) clipping.
-- OUTPUT: 0 = -1 dBFS ceiling. Pull it down and the limiter starts working
-  (GR meter next to the slider).
-- HQ: 4x oversampling (adds a little latency, reported to your DAW).
+- OUTPUT: 0 = 0 dBFS ceiling. Pull it down and the limiter starts working
+  (GR meter and readout next to the slider).
+- HQ (next to OUTPUT): 4x oversampling (adds a little latency, reported to your DAW).
 
 
 TROUBLESHOOTING
@@ -286,11 +285,10 @@ KURZ ZUR BEDIENUNG
   Die Kurve oben zeigt es: Sinus = sauber, flach = ganz gequetscht.
   Je weiter du aufdrehst, desto roter leuchtet das Plugin.
 - SOFT / HARD (Schieberegler über dem Knob): von rundem, weichem Clip bis Hard Clip.
-- HEAT: zusätzliche warme Sättigung vor dem Clipper.
 - MIX: Mischt Clipper und Original für paralleles Clipping (New-York-Style).
-- OUTPUT: 0 = -1 dBFS Ceiling. Zieh ihn runter, dann startet der Limiter
-  (GR-Anzeige neben dem Regler).
-- HQ: 4x Oversampling (etwas Latenz, wird der DAW gemeldet).
+- OUTPUT: 0 = 0 dBFS Ceiling. Zieh ihn runter, dann startet der Limiter
+  (GR-Meter und Zahl neben dem Regler).
+- HQ (neben OUTPUT): 4x Oversampling (etwas Latenz, wird der DAW gemeldet).
 
 
 PROBLEME

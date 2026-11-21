@@ -32,15 +32,15 @@ int main()
         return peakOf (buf);
     };
 
-    // 1) Ceiling: nie lauter als -1 dBFS, auch bei maximalem Clip + Input
-    { KnackParams p; p.clip = 1.0f; p.inputDb = 24.0f; p.heat = 1.0f;
+    // 1) Ceiling: nie lauter als 0 dBFS, auch bei maximalem Clip + Input
+    { KnackParams p; p.clip = 1.0f; p.inputDb = 24.0f;
       const float pk = run (p, 1.0f);
-      CHECK (pk <= juce::Decibels::decibelsToGain (-1.0f) + 1e-4f, "Peak <= -1 dBFS bei Maximum"); }
+      CHECK (pk <= 1.0f + 1e-4f, "Peak <= 0 dBFS bei Maximum"); }
 
-    // 2) OUT zurueckziehen: Ceiling sinkt (-6 -> -7 dBFS) und Limiter zeigt GR
+    // 2) OUT zurueckziehen: Ceiling sinkt (-6 dBFS) und Limiter zeigt GR
     { KnackParams p; p.clip = 1.0f; p.outputDb = -6.0f;
       const float pk = run (p, 1.0f);
-      CHECK (pk <= juce::Decibels::decibelsToGain (-7.0f) + 1e-4f, "OUT -6 => Peak <= -7 dBFS");
+      CHECK (pk <= juce::Decibels::decibelsToGain (-6.0f) + 1e-4f, "OUT -6 => Peak <= -6 dBFS");
       CHECK (e.limGrDb.load() > 0.5f, "Limiter GR sichtbar"); }
 
     // 3) CLIP=0, Mix=1, Heat=0: ziemlich linear (kleines Signal bleibt fast gleich)
@@ -64,7 +64,7 @@ int main()
     { KnackParams p; p.clip = 1.0f; p.shape = 1.0f; p.hq = false; p.outputDb = 0.0f;
       run (p, 0.5f, 20);
       sine (buf, sr, 0.5f, 220.0, 20 * block); e.process (buf, p);
-      const float ceil = juce::Decibels::decibelsToGain (-1.0f);
+      const float ceil = 1.0f;
       int near = 0; for (int i = 0; i < block; ++i) if (std::abs (buf.getSample (0, i)) > 0.9f * ceil) ++near;
       CHECK (near > block * 0.6f, "CLIP 100 % + HARD: Welle fast ein Rechteck"); }
 
@@ -78,11 +78,17 @@ int main()
       std::printf("   RMS soft %.3f / hard %.3f\n", rmsS, rmsH);
       CHECK (rmsH > rmsS, "Hard klingt dichter (mehr RMS) als Soft"); }
 
-    // 7) Heat erzeugt kein DC am Ausgang (187.5 Hz = ganze Perioden pro Block)
-    { KnackParams p; p.clip = 0.3f; p.heat = 1.0f; p.hq = false;
-      for (int b = 0; b < 200; ++b) { sine (buf, sr, 0.4f, 187.5, b * block); e.process (buf, p); }
-      double sum = 0; for (int i = 0; i < block; ++i) sum += buf.getSample (0, i);
-      CHECK (std::abs (sum / block) < 0.01, "Heat: kein DC-Offset"); }
+    // 7) OUT 0: Limiter greift bei normalem Pegel nicht ein (kein GR im Normalbetrieb)
+    { KnackParams p; p.clip = 0.35f; p.shape = 0.5f; p.hq = true; e.reset();
+      run (p, 0.3f, 60);
+      std::printf("   Limiter GR bei normalem Pegel: %.3f dB\n", e.limGrDb.load());
+      CHECK (e.limGrDb.load() < 0.1f, "OUT 0: Limiter inaktiv bei normalem Pegel"); }
+
+    // 7b) Auch bei Maximum (Hard, +24 dB) bleibt der GR klein (nur Oversampling-Ueberschwinger)
+    { KnackParams p; p.clip = 1.0f; p.shape = 1.0f; p.hq = true; e.reset();
+      run (p, 0.5f, 60);
+      std::printf("   Limiter GR bei Maximum: %.3f dB\n", e.limGrDb.load());
+      CHECK (e.limGrDb.load() < 1.5f, "Maximum: Limiter-GR klein"); }
 
     // 8) Calibrate: Eingang -20 dBFS Peak -> Input +14 dB (Ziel -6 dBFS)
     { e.reset(); KnackParams p; e.startCalibration();

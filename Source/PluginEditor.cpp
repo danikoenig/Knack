@@ -24,7 +24,6 @@ KnackEditor::KnackEditor (KnackProcessor& p) : AudioProcessorEditor (&p), proces
     clipKnob.getProperties().set ("big", true);
     setupSlider (inputKnob, ParamID::input,  Slider::RotaryHorizontalVerticalDrag, Slider::TextBoxBelow, calm);
     setupSlider (shapeSlider, ParamID::shape, Slider::LinearHorizontal, Slider::NoTextBox, clipColour (0.8f));
-    setupSlider (heatSlider, ParamID::heat,  Slider::LinearHorizontal, Slider::TextBoxRight, heat);
     setupSlider (mixSlider,  ParamID::mix,   Slider::LinearHorizontal, Slider::TextBoxRight, mixCol);
     setupSlider (outSlider,  ParamID::output, Slider::LinearVertical, Slider::NoTextBox, outCol);
     clipKnob.setMouseDragSensitivity (260);
@@ -32,7 +31,6 @@ KnackEditor::KnackEditor (KnackProcessor& p) : AudioProcessorEditor (&p), proces
     clipAtt  = std::make_unique<SA> (apvts, ParamID::clip, clipKnob);
     inputAtt = std::make_unique<SA> (apvts, ParamID::input, inputKnob);
     shapeAtt = std::make_unique<SA> (apvts, ParamID::shape, shapeSlider);
-    heatAtt  = std::make_unique<SA> (apvts, ParamID::heat, heatSlider);
     mixAtt   = std::make_unique<SA> (apvts, ParamID::mix, mixSlider);
     outAtt   = std::make_unique<SA> (apvts, ParamID::output, outSlider);
 
@@ -76,7 +74,7 @@ void KnackEditor::resized()
 {
     scale = (float) getWidth() / designW;
 
-    hqBtn.setBounds (R (226, 22, 58, 22));
+    hqBtn.setBounds (R (232, 672, 52, 22));
     scope.setBounds (R (16, 84, 268, 100));
 
     shapeSlider.setBounds (R (60, 192, 180, 22));
@@ -84,18 +82,16 @@ void KnackEditor::resized()
     clipKnob.setBounds (R (10, 218, 280, 278));
     clipKnob.setTextBoxStyle (Slider::TextBoxBelow, false, roundToInt (80 * scale), roundToInt (18 * scale));
 
-    heatSlider.setBounds (R (66, 512, 218, 26));
-    heatSlider.setTextBoxStyle (Slider::TextBoxRight, false, roundToInt (54 * scale), roundToInt (16 * scale));
-    mixSlider.setBounds (R (66, 544, 218, 26));
+    mixSlider.setBounds (R (66, 520, 218, 26));
     mixSlider.setTextBoxStyle (Slider::TextBoxRight, false, roundToInt (54 * scale), roundToInt (16 * scale));
 
-    inputKnob.setBounds (R (14, 606, 84, 92));
+    inputKnob.setBounds (R (14, 594, 84, 92));
     inputKnob.setTextBoxStyle (Slider::TextBoxBelow, false, roundToInt (70 * scale), roundToInt (16 * scale));
-    inMeter.setBounds (R (106, 610, 12, 72));
-    calibrateBtn.setBounds (R (16, 704, 124, 26));
+    inMeter.setBounds (R (106, 598, 12, 72));
+    calibrateBtn.setBounds (R (16, 692, 124, 26));
 
-    outSlider.setBounds (R (176, 610, 28, 96));
-    limMeter.setBounds (R (214, 610, 12, 96));
+    outSlider.setBounds (R (176, 598, 28, 96));
+    limMeter.setBounds (R (214, 598, 12, 96));
 }
 
 void KnackEditor::timerCallback()
@@ -123,8 +119,8 @@ void KnackEditor::timerCallback()
     calibrateBtn.setButtonText (cal ? "LISTENING..." : "CALIBRATE");
     calibrateBtn.repaint();
 
-    repaint (R (0, 0, designW, 584));   // Hintergrund-Glow
-    repaint (R (150, 584, 150, 156));
+    repaint (R (0, 0, designW, 572));   // Hintergrund-Glow
+    repaint (R (150, 570, 150, 160));
 }
 
 void KnackEditor::paint (Graphics& g)
@@ -156,10 +152,13 @@ void KnackEditor::paint (Graphics& g)
         {
             const auto s = String::charToString (title[i]);
             const float gw = g.getCurrentFont().getStringWidthFloat (s);
-            g.drawText (s, Rectangle<float> (x, 12.0f * scale, gw + 4.0f, 46.0f * scale), Justification::centredLeft);
+            g.drawText (s, Rectangle<float> (x, 16.0f * scale, gw + 4.0f, 44.0f * scale), Justification::centredLeft);
             x += gw + spacing;
         }
     }
+    g.setColour (textDim);
+    g.setFont (FontOptions (9.5f * scale, Font::bold));
+    g.drawText ("by Dani Koenig", R (0, 5, designW, 12).toFloat(), Justification::centred);
     g.setColour (clipColour (glow));
     g.setFont (FontOptions (12.0f * scale, Font::bold));
     g.drawText ("C L I P P E R", R (0, 58, designW, 16).toFloat(), Justification::centred);
@@ -170,26 +169,29 @@ void KnackEditor::paint (Graphics& g)
     g.drawText ("CLIP", R (0, 496, designW, 12).toFloat(), Justification::centred);
     g.drawText ("SOFT", R (16, 192, 42, 22).toFloat(), Justification::centredRight);
     g.drawText ("HARD", R (242, 192, 42, 22).toFloat(), Justification::centredLeft);
-    g.drawText ("HEAT", R (16, 512, 48, 26).toFloat(), Justification::centredLeft);
-    g.drawText ("MIX", R (16, 544, 48, 26).toFloat(), Justification::centredLeft);
-    g.drawText ("INPUT", R (16, 588, 100, 14).toFloat(), Justification::centredLeft);
-    g.drawText ("OUTPUT", R (176, 588, 100, 14).toFloat(), Justification::centredLeft);
+    g.drawText ("MIX", R (16, 520, 48, 26).toFloat(), Justification::centredLeft);
+    g.drawText ("INPUT", R (16, 576, 100, 14).toFloat(), Justification::centredLeft);
+    g.drawText ("OUTPUT", R (176, 576, 100, 14).toFloat(), Justification::centredLeft);
 
     // Trennlinie
     g.setColour (cardBorder);
-    g.drawHorizontalLine (roundToInt (578.0f * scale), 16.0f * scale, (designW - 16.0f) * scale);
+    g.drawHorizontalLine (roundToInt (566.0f * scale), 16.0f * scale, (designW - 16.0f) * scale);
 
-    // Output-Anzeige: 0 = -1 dBFS Ceiling
+    // Output-Anzeige: 0 dB = 0 dBFS Ceiling; GR des Limiters in 0.1-dB-Schritten
     const float outDb = (float) outSlider.getValue();
-    g.setColour (text.withAlpha (0.9f));
-    g.setFont (FontOptions (12.0f * scale));
-    g.drawText (String (outDb, 1) + " dB", R (232, 644, 60, 16).toFloat(), Justification::centredLeft);
+    const float gr = processor.getEngine().limGrDb.load();
     g.setColour (textDim);
     g.setFont (FontOptions (9.5f * scale, Font::bold));
-    g.drawText ("0 = -1 dBFS", R (232, 660, 64, 14).toFloat(), Justification::centredLeft);
-    g.drawText ("LIMIT", R (232, 610, 60, 14).toFloat(), Justification::centredLeft);
-    g.drawText (processor.getEngine().limGrDb.load() > 0.1f ? "GR -" + String (processor.getEngine().limGrDb.load(), 1)
-                                                            : "GR 0.0", R (232, 624, 64, 14).toFloat(), Justification::centredLeft);
+    g.drawText ("GR", R (232, 598, 60, 12).toFloat(), Justification::centredLeft);
+    g.setColour (gr > 0.05f ? outCol : text.withAlpha (0.9f));
+    g.setFont (FontOptions (13.0f * scale, Font::bold));
+    g.drawText (gr > 0.05f ? "-" + String (gr, 1) : "0.0", R (232, 610, 60, 16).toFloat(), Justification::centredLeft);
+    g.setColour (textDim);
+    g.setFont (FontOptions (9.5f * scale, Font::bold));
+    g.drawText ("LEVEL", R (232, 636, 60, 12).toFloat(), Justification::centredLeft);
+    g.setColour (text.withAlpha (0.9f));
+    g.setFont (FontOptions (12.0f * scale));
+    g.drawText (String (outDb, 1) + " dB", R (232, 648, 60, 16).toFloat(), Justification::centredLeft);
 }
 
 void KnackEditor::paintOverChildren (Graphics& g)

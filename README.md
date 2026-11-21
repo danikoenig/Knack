@@ -20,4 +20,4 @@ cmake -B build -DKNACK_TEST_SRC=tests/EngineTest.cpp && cmake --build build --ta
 ```
 
 ## Install
-See [INSTALL.txt](INSTALL.txt) or the [releases](https://github.com/danikoenig/knack/releases).
+See [INSTALL.txt](INSTALL.txt) or the [releases](https://github.com/danikoenig/Knack/releases).
